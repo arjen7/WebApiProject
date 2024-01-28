@@ -122,19 +122,25 @@ namespace Shopping.Migrations
                         column: x => x.ProductListId,
                         principalTable: "ProductLists",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_UserProducts_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "CreatedBy", "CreatedDate", "Email", "LastName", "ModifiedBy", "ModifiedDate", "Name", "PasswordHash", "Role", "SaltValue" },
-                values: new object[] { 1, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@gmail.com", "admin", null, null, "admin", "j8UhpUdlpnjBFNWc1mdgpj+6m6JzS6Jj3v466CujQCc=", "Admin", new byte[] { 132, 177, 6, 146, 215, 88, 189, 93, 157, 249, 239, 225, 150, 29, 176, 134 } });
+                values: new object[] { 1, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@gmail.com", "admin", null, null, "admin", "qZ1qNuPDqy4jPgND/QG3A7oHoNqAwc202CaduSBoM8A=", "Admin", new byte[] { 11, 216, 170, 127, 223, 62, 117, 14, 154, 192, 159, 233, 88, 253, 133, 143 } });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Categories_Name",
+                table: "Categories",
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductLists_UserId",
@@ -147,6 +153,12 @@ namespace Shopping.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Products_Name",
+                table: "Products",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserProducts_ProductId",
                 table: "UserProducts",
                 column: "ProductId");
@@ -155,6 +167,12 @@ namespace Shopping.Migrations
                 name: "IX_UserProducts_ProductListId",
                 table: "UserProducts",
                 column: "ProductListId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Email",
+                table: "Users",
+                column: "Email",
+                unique: true);
         }
 
         /// <inheritdoc />

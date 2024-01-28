@@ -12,8 +12,8 @@ using Shopping.Models.entity;
 namespace Shopping.Migrations
 {
     [DbContext(typeof(ShoppingDbContext))]
-    [Migration("20240128015750_InitialCreate3")]
-    partial class InitialCreate3
+    [Migration("20240128025133_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -205,9 +205,9 @@ namespace Shopping.Migrations
                             Email = "admin@gmail.com",
                             LastName = "admin",
                             Name = "admin",
-                            PasswordHash = "eS6bFxr+pC18u/KI+mO/F8LhOnSLAMRfPI08yG+PZaE=",
+                            PasswordHash = "qZ1qNuPDqy4jPgND/QG3A7oHoNqAwc202CaduSBoM8A=",
                             Role = "Admin",
-                            SaltValue = new byte[] { 77, 118, 76, 177, 223, 114, 249, 230, 18, 196, 193, 25, 159, 60, 20, 166 }
+                            SaltValue = new byte[] { 11, 216, 170, 127, 223, 62, 117, 14, 154, 192, 159, 233, 88, 253, 133, 143 }
                         });
                 });
 
