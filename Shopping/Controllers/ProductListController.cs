@@ -10,7 +10,7 @@ using System.Security.Claims;
 
 namespace Shopping.Controllers
 {
-    [Route("api/user/{userid}/productlist")]
+    [Route("api/user/productlist")]
     [ApiController]
     public class ProductListController : ControllerBase
     {
