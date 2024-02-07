@@ -18,7 +18,7 @@ namespace Shopping.Controllers
         [Authorize]
         public async Task<IActionResult> Get()
         {
-            var userid = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name).Value);
+            var userid = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value);
             using var context = new ShoppingDbContext();
             var user=await context.Users.FirstOrDefaultAsync(p=>p.Id==userid);
             if (user != null)
@@ -37,7 +37,7 @@ namespace Shopping.Controllers
         {
             
             using var context = new ShoppingDbContext();
-            var userid = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name).Value);
+            var userid = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value);
             var user = await context.Users.FirstOrDefaultAsync(p => p.Id == userid);
             if (user != null)
             {
@@ -53,7 +53,7 @@ namespace Shopping.Controllers
         public async Task<IActionResult> Post( [FromBody] string name)
         {
             using var context = new ShoppingDbContext();
-            var userid = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name).Value);
+            var userid = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value);
             var user = await context.Users.Include(p => p.ProductLists).FirstOrDefaultAsync(p => p.Id==userid);
             if (user != null)
             {
@@ -62,7 +62,7 @@ namespace Shopping.Controllers
                 {
                     productlist = new ProductList() { Name = name, User = user };
                     user.ProductLists.Add(productlist);
-                    context.UserId = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name).Value);
+                    context.UserId = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value);
                     await context.SaveChangesAsync();
                     return Ok(new { Message = "Product list added successful" });
                 }
@@ -77,7 +77,7 @@ namespace Shopping.Controllers
         {
             
             using var context = new ShoppingDbContext();
-            var userid = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name).Value);
+            var userid = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value);
             var user = await context.Users.FirstOrDefaultAsync(p => p.Id == userid);
             if (user != null)
             {
@@ -98,7 +98,7 @@ namespace Shopping.Controllers
                                 ProductList = productlist,
                             };
                             productlist.UserProducts.Add(usrproduct);
-                            context.UserId = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name).Value);
+                            context.UserId = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value);
                             await context.SaveChangesAsync();
                             return Ok(new { Message = "Product added successfuly" });
                         }
@@ -116,7 +116,7 @@ namespace Shopping.Controllers
         {
             
             using var context = new ShoppingDbContext();
-            var userid = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name).Value);
+            var userid = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value);
             var user = await context.Users.Include(p=>p.ProductLists).FirstOrDefaultAsync(p => p.Id ==userid);
             if (user != null)
             {
@@ -125,7 +125,7 @@ namespace Shopping.Controllers
                 {
                     productlist.IsCompleted = iscompeleted;
                     await context.SaveChangesAsync();
-                    context.UserId = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name).Value);
+                    context.UserId = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value);
                     return Ok(new { Message = "Product list complete status changed" });
                 }
                 return NotFound(new { Message = "Product list not found" });
@@ -139,7 +139,7 @@ namespace Shopping.Controllers
         {
             
             using var context = new ShoppingDbContext();
-            var userid = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name).Value);
+            var userid = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value);
             var user = await context.Users.FirstOrDefaultAsync(p => p.Id==userid);
             if (user != null)
             {
@@ -147,7 +147,7 @@ namespace Shopping.Controllers
                 if (productlist != null && user.Id == productlist.UserId)
                 {
                     user.ProductLists.Remove(productlist);
-                    context.UserId = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name).Value);
+                    context.UserId = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value);
                     await context.SaveChangesAsync();
                     return Ok(new { Message = "Product list removed successfuly" });
                 }
@@ -162,7 +162,7 @@ namespace Shopping.Controllers
         {
             
             using var context = new ShoppingDbContext();
-            var userid = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name).Value);
+            var userid = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value);
             var user = await context.Users.FirstOrDefaultAsync(p => p.Id==userid);
             if (user != null)
             {
@@ -174,7 +174,7 @@ namespace Shopping.Controllers
                     if (usrproduct != null)
                     {
                         productlist.UserProducts.Remove(usrproduct);
-                        context.UserId = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name).Value);
+                        context.UserId = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value);
                         await context.SaveChangesAsync();
                         return Ok(new { Message = "Product removed successfuly" });
                     }

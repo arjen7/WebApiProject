@@ -26,7 +26,7 @@ namespace Shopping.Services
                     issuer: configuration["AppSettings:ValidIssuer"],
                     audience: configuration["AppSettings:ValidAudience"],
                     claims: new List<Claim> {
-                    new(ClaimTypes.Name, request.UserId.ToString()),
+                    new(ClaimTypes.NameIdentifier, request.UserId.ToString()),
                     new(ClaimTypes.Role,request.Role)
                     },
                     notBefore: dateTimeNow,

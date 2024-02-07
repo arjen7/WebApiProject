@@ -7,6 +7,9 @@ namespace Shopping.Models.entity
 {
     public class ShoppingDbContext : DbContext
     {
+        private readonly IConfiguration configuration = new ConfigurationBuilder()
+            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true).Build();
         public int UserId { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<ProductList> ProductLists { get; set; }
@@ -18,7 +21,7 @@ namespace Shopping.Models.entity
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlServer(
-                    "Server=.;Database=ShoppingDb;Trusted_Connection=True;TrustServerCertificate=True;",
+                    configuration["ConnectionStrings:DefaultConnection"],
                     options => options.EnableRetryOnFailure());
             }
         }
@@ -60,9 +63,6 @@ namespace Shopping.Models.entity
             modelBuilder.Entity<User>().HasIndex(p=>p.Email).IsUnique();
             modelBuilder.Entity<Category>().HasIndex(p => p.Name).IsUnique();
             modelBuilder.Entity<Product>().HasIndex(p => p.Name).IsUnique();
-
-
-
 
         }
         public override int SaveChanges()

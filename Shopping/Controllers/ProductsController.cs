@@ -77,9 +77,9 @@ namespace Shopping.Controllers
                         var imageUrl = "/Upload/Product_Images/" + uniqueFileName;
                         product = new Product { Name = _product.Name, Category = category, ImageUrl = imageUrl };
                         context.Products.Add(product);
-                        context.UserId = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name).Value);
+                        context.UserId = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value);
                         await context.SaveChangesAsync();
-                        context.UserId = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name).Value);
+                        context.UserId = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value);
                         return Ok("Product added successfuly");
                     }
                     return NotFound(new { Message = "Category not found" });
@@ -139,7 +139,7 @@ namespace Shopping.Controllers
                 { 
                     product.ImageUrl = imageUrl; 
                 }
-                context.UserId = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name).Value);
+                context.UserId = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value);
                 await context.SaveChangesAsync();
                 return Ok("Product update successfuly");
             }
@@ -165,7 +165,7 @@ namespace Shopping.Controllers
                     }
                 }
                 context.Products.Remove(product);
-                context.UserId = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name).Value);
+                context.UserId = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value);
                 await context.SaveChangesAsync();
                 return Ok(new { Message = "Product is removed successful" });
             }

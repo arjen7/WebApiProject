@@ -48,7 +48,7 @@ namespace Shopping.Controllers
                 {
                     categories.Name = name;
                     context.Categories.Update(categories);
-                    context.UserId = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name).Value);
+                    context.UserId = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value);
                     await context.SaveChangesAsync();
                     return Ok(new { Message = "Category name changed successfuly" });
                 }
@@ -67,7 +67,7 @@ namespace Shopping.Controllers
             {
                 categories = new Category() { Name = name };
                 await context.Categories.AddAsync(categories);
-                context.UserId = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name).Value);
+                context.UserId = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value);
                 await context.SaveChangesAsync();
                 return Ok(new { Message = "Category Added Successfuly" });
             }
@@ -83,7 +83,7 @@ namespace Shopping.Controllers
             if (category != null) 
             {
                 context.Categories.Remove(category);
-                context.UserId = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name).Value);
+                context.UserId = int.Parse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value);
                 await context.SaveChangesAsync();
                 return Ok(new { Message = "Category removed Successfuly" });
             }
