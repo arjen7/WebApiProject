@@ -1,36 +1,33 @@
-﻿using Business.Interface;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Shopping.Business.Core;
+using Shopping.Interface;
 using System.Security.Claims;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Shopping.Controllers
 {
-    [Route("api/user/productlist")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class ProductListController : ControllerBase
+    public class UserProductController : ControllerBase
     {
-        private readonly IProductListService _productListService;
+        private readonly IUserProductService _userProductService;
 
-        public ProductListController(IProductListService productListService)
+        public UserProductController(IUserProductService userProductService)
         {
-            _productListService = productListService;
+            _userProductService = userProductService;
         }
 
         [HttpGet("getall")]
         [Authorize]
-        public async Task<IActionResult> GetAll([FromQuery]int page)
+        public async Task<IActionResult> GetAll([FromQuery] int page)
         {
-            if(Guid.TryParse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value,out Guid UserId))
+            if (Guid.TryParse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value, out Guid UserId))
             {
-                var result = await _productListService.GetAll(UserId, page);
+                var result = await _userProductService.GetAll(UserId, page);
                 if (result.Status == 200)
                 {
-                    return Ok(result);  
+                    return Ok(result);
                 }
                 else if (result.Status == 404)
                 {
@@ -48,7 +45,7 @@ namespace Shopping.Controllers
 
             if (Guid.TryParse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value, out Guid UserId))
             {
-                var result = await _productListService.Get(UserId, id);
+                var result = await _userProductService.Get(UserId, id);
                 if (result.Status == 200)
                 {
                     return Ok(result);
@@ -64,34 +61,11 @@ namespace Shopping.Controllers
         }
         [HttpPost("Create")]
         [Authorize]
-        public async Task<IActionResult> Post( [FromBody] ProductListResponse res)
+        public async Task<IActionResult> Post([FromBody] UserProductResponse res)
         {
             if (Guid.TryParse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value, out Guid UserId))
             {
-                var result = await _productListService.Create(UserId, res);
-                if (result.Status == 200)
-                {
-                    return Ok(result);
-                }
-                else if (result.Status == 404)
-                {
-                    return NotFound(result);
-                }
-                else
-                    return BadRequest(result);
-            }
-            return BadRequest();
-        }
-
-        
-        [HttpPatch("update/{Id}")]
-        [Authorize]
-        public async Task<IActionResult> Patch(Guid Id,[FromQuery] bool iscompeleted)
-        {
-
-            if (Guid.TryParse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value, out Guid UserId))
-            {
-                var result = await _productListService.Update(UserId, Id,iscompeleted);
+                var result = await _userProductService.Create(UserId, res);
                 if (result.Status == 200)
                 {
                     return Ok(result);
@@ -113,7 +87,7 @@ namespace Shopping.Controllers
 
             if (Guid.TryParse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value, out Guid UserId))
             {
-                var result = await _productListService.Delete(UserId, Id);
+                var result = await _userProductService.Delete(UserId, Id);
                 if (result.Status == 200)
                 {
                     return Ok(result);

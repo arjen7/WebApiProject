@@ -1,10 +1,20 @@
+using Business.Interface;
+using Business.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Shopping.Interfaces;
-using Shopping.Services;
+using Shopping.Business.Interfaces;
+using Shopping.Business.Service;
+using Shopping.Business.Services;
+using Shopping.Data.Context;
+using Shopping.Data.Interface;
+using Shopping.Data.Repository;
+using Shopping.Interface;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,10 +51,46 @@ builder.Services.AddSwaggerGen(opt =>
         }
     });
 });
-builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
-    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.IgnoreNullValues = true;
+});
+
+//context
+builder.Services.AddDbContext<ShoppingDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+//Services
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<ITokenService, TokenService>();
+builder.Services.AddScoped<IPasswordService, PasswordService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICategoryService,CategoryService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IUserProductService, UserProductService>();
+builder.Services.AddScoped<IProductListService, ProductListService>();
+
+//Repository
+builder.Services.AddScoped<IUserRepository,UserRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IProductListRepository, ProductListRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IUserProductRepository, UserProductRepository>();
+
+builder.Services.AddCors(options =>
+{
+    var allowedDomains = new[] { "https://*.azurewebsites.net", "https://*", "http://*" };
+
+    options.AddPolicy("CorsPolicy", builder => builder.WithOrigins(allowedDomains)
+                        //.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials()
+                        .SetIsOriginAllowedToAllowWildcardSubdomains()
+                        .Build());
+});
+
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -76,7 +122,7 @@ app.UseStaticFiles(new StaticFileOptions
     RequestPath = "/Upload/Product_Images"  
 });
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
