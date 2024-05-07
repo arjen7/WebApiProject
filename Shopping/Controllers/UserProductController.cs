@@ -102,5 +102,26 @@ namespace Shopping.Controllers
             return BadRequest();
 
         }
+        [HttpPatch("update/{Id}")]
+        [Authorize]
+        public async Task<IActionResult> Patch(Guid Id, [FromBody] UserProductUpdateResponse res)
+        {
+
+            if (Guid.TryParse(User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value, out Guid UserId))
+            {
+                var result = await _userProductService.Update(UserId,Id, res);
+                if (result.Status == 200)
+                {
+                    return Ok(result);
+                }
+                else if (result.Status == 404)
+                {
+                    return NotFound(result);
+                }
+                else
+                    return BadRequest(result);
+            }
+            return BadRequest();
+        }
     }
 }

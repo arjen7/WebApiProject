@@ -27,6 +27,11 @@ namespace Shopping.Business.Core
         public Guid Productid { get; set; }
         public string Comment { get; set; } = "";
     }
+    public class UserProductUpdateResponse
+    {
+        public string? Comment { get; set; } = "";
+        public bool IsTake {  get; set; }
+    }
     public class ProductListResponse
     {
         public string Name { get; set; }

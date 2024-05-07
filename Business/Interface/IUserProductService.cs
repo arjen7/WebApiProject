@@ -9,6 +9,7 @@ namespace Shopping.Interface
         public Task<BaseDto> Delete(Guid UserId, Guid Id);
         public Task<UserProductListDto> GetAll(Guid UserId, int page);
         public Task<UserProductDto> Get(Guid UserId, Guid Id);
-        
+        public Task<UserProductDto> Update(Guid UserId,Guid Id, UserProductUpdateResponse res);
+
     }
 }

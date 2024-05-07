@@ -1,5 +1,6 @@
 ﻿using Business.Core;
 using Entity.Entities;
+using Microsoft.IdentityModel.Tokens;
 using Shopping.Business.Core;
 using Shopping.Data.Interface;
 using Shopping.Interface;
@@ -115,12 +116,35 @@ namespace Business.Service
             var product = await _userProductRepository.GetByIdAsync(UserId,Id);
             if (product == null)
             {
-                response.DeveloperMessage = "product Not Found";
+                response.DeveloperMessage = "userproduct Not Found";
                 response.Message = "Not Found";
                 response.Status = 404;
                 return response;
             }
             response.Message = "Success";
+            response.UserProduct = product;
+            response.Status = 200;
+            return response;
+        }
+        public async Task<UserProductDto> Update(Guid UserId,Guid Id,UserProductUpdateResponse res )
+        {
+            var response = new UserProductDto();
+            var product = await _userProductRepository.GetByIdAsync(UserId, Id);
+            if (product == null)
+            {
+                response.DeveloperMessage = "userproduct Not Found";
+                response.Message = "Not Found";
+                response.Status = 404;
+                return response;
+            }
+            if (!res.Comment.IsNullOrEmpty())
+            {
+                product.Comment = res.Comment;
+            }
+            product.IsTake = res.IsTake;
+            await _userProductRepository.UpdateAsync(Id, product);
+            response.Message = "Success";
+            response.DeveloperMessage = "UserProduct Update";
             response.UserProduct = product;
             response.Status = 200;
             return response;
