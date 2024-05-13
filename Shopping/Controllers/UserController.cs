@@ -43,6 +43,7 @@ namespace Shopping.Controllers
                         LastName = result.User.LastName,
                         ModifiedDate = result.User.ModifiedDate,
                         Name = result.User.Name,
+                        Role=result.User.Role,
                     };
                     return Ok(result);
                 }
